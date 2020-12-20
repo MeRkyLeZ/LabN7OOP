@@ -11,7 +11,7 @@ namespace LabN7OOP
 
     class Repository    // Хранилище
     {
-        private Figure[] arr;   // Массив элементов
+        private CShapes[] arr;   // Массив элементов
         private int size;   // Размер массива
         private int count;  // Количество элементов
 
@@ -19,13 +19,13 @@ namespace LabN7OOP
         {
             size = 0;
             count = 0;
-            arr = new Figure[size];
+            arr = new CShapes[size];
         }
         public Repository(int size) // Конструктор
         {
             this.size = size;
             count = 0;
-            arr = new Figure[size];
+            arr = new CShapes[size];
         }
         ~Repository()   // Деструктор
         {
@@ -40,17 +40,17 @@ namespace LabN7OOP
             arr[pos] = null;
             count--;
         }
-        public void addObject(Figure point) // Добавление элемента
-        { 
+        public CShapes addObject(CShapes point) // Добавление элемента
+        {
             int pos = 0;
             while (!isNull(pos) && pos < size)
             {
                 pos++;
             }
-            if (pos == size)
+            if (pos == size - 1)
             {
                 size++;
-                Figure[] tmp = new Figure[size];
+                CShapes[] tmp = new CShapes[size];
                 for (int i = 0; i < size - 1; ++i)
                 {
                     tmp[i] = arr[i];
@@ -59,14 +59,15 @@ namespace LabN7OOP
             }
             arr[pos] = point;
             count++;
+            return arr[pos];
         }
-        public void setObject(int pos,Figure point) // Изменение элемента
+        public void setObject(int pos, CShapes point) // Изменение элемента
         {
             if (pos >= size)
             {
                 int oldsize = size;
                 size = pos + 1;
-                Figure[] tmp = new Figure[size];
+                CShapes[] tmp = new CShapes[size];
                 for (int i = 0; i < size - 1; ++i)
                 {
                     tmp[i] = arr[i];
@@ -76,7 +77,7 @@ namespace LabN7OOP
             }
             arr[pos] = point;
         }
-        public Figure getObject(int pos)    // Получение элемента
+        public CShapes getObject(int pos)    // Получение элемента
         {
             return arr[pos];
         }

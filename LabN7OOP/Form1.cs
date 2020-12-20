@@ -12,191 +12,104 @@ namespace LabN7OOP
 {
     public partial class Form1 : Form
     {
+        Repository repos = new Repository(10);   // Хранилище объектов
+        int R = 50; // Размер фигуры
+
+
         public Form1()
         {
             InitializeComponent();
         }
 
-        Repository repos = new Repository(10);   // Хранилище объектов
-        int R = 50; // Размер фигуры
-        Figure fig;  // Фигура для создания
-
-        private int GetDistance(int x0, int x, int y0, int y)   // Вычисление дистанции между точками
-        {
-            return ((int)Math.Pow((x0 - x), 2) + (int)Math.Pow((y0 - y), 2));
-        }
-        private bool CheckIn(int x, int y, int R)   // Проверка выхода за поле рисования
-        {
-            return (x + R < (pictureBox1.Location.X + pictureBox1.Width) && x - R > pictureBox1.Location.X && y + R < (pictureBox1.Location.Y + pictureBox1.Height) && y - R > pictureBox1.Location.Y);
-        }
-
         private void pictureBox1_Paint(object sender, PaintEventArgs e) // Отрисовка формы
         {
-            Pen pen = new Pen(Color.Black);    // Кисть
-            Brush brush = new SolidBrush(Color.Black); // Заливка
             for (int i = 0; i < repos.getSize(); ++i)
             {
                 if (!repos.isNull(i))
                 {
-                    pen.Color = repos.getObject(i).getColor();
-                    if (repos.getObject(i) is CCircle)
-                    {
-                        CCircle c = (CCircle)repos.getObject(i);
-                        if (repos.getObject(i).getSelected() == false)
-                        {
-                            e.Graphics.DrawEllipse(pen, c.getX() - c.getR(), c.getY() - c.getR(), c.getR() * 2, c.getR() * 2);  // Рисуем элемент
-                        }
-                        else
-                        {
-
-                            e.Graphics.FillEllipse(brush, c.getX() - c.getR(), c.getY() - c.getR(), c.getR() * 2, c.getR() * 2);    // Заливаем элемент
-                        }
-                    }
-
-                    else if (repos.getObject(i) is CSquare)
-                    {
-                        CSquare c = (CSquare)repos.getObject(i);
-                        if (repos.getObject(i).getSelected() == false)
-                        {
-                            e.Graphics.DrawRectangle(pen, c.getX() - c.getR(), c.getY() - c.getR(), c.getR() * 2, c.getR() * 2);    // Рисуем элемент
-                        }
-                        else
-                        {
-
-                            e.Graphics.FillRectangle(brush, c.getX() - c.getR(), c.getY() - c.getR(), c.getR() * 2, c.getR() * 2);  // Заливаем элемент
-                        }
-
-                    }
-                    else if (repos.getObject(i) is CTriangle)
-                    {
-
-                        CTriangle c = (CTriangle)repos.getObject(i);
-                        Point p1 = new Point(c.getX(), c.getY() - c.getR());
-                        Point p2 = new Point(c.getX() - c.getR(), c.getY() + c.getR());
-                        Point p3 = new Point(c.getX() + c.getR(), c.getY() + c.getR());
-                        Point[] p = new Point[3];   // Треугольник
-                        p[0] = p1;
-                        p[1] = p2;
-                        p[2] = p3;
-                        if (repos.getObject(i).getSelected() == false)
-                        {
-                            e.Graphics.DrawPolygon(pen, p); // Рисуем элемент
-                        }
-                        else
-                        {
-                            e.Graphics.FillPolygon(brush, p);   // Заливаем элемент
-                        }
-                    }
-
+                    repos.getObject(i).draw(e.Graphics);
                 }
             }
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)  //Обработчик нажатия поля
         {
-            int check = 0;  // Проверка нахождения объекта при нажатии
+            bool check = false;  // Проверка нахождения объекта при нажатии
             int x, y;
+            x = this.PointToClient(Cursor.Position).X - pictureBox1.Location.X;
+            y = this.PointToClient(Cursor.Position).Y - pictureBox1.Location.Y;
             if ((Control.ModifierKeys == Keys.Control)) // Проверка нажатия Ctrl
             {
-                x = this.PointToClient(Cursor.Position).X - pictureBox1.Location.X;
-                y = this.PointToClient(Cursor.Position).Y - pictureBox1.Location.Y;
                 for (int i = 0; i < repos.getSize(); ++i)
                 {
                     if (!repos.isNull(i))
                     {
-                        if (GetDistance(repos.getObject(i).getX(), x, repos.getObject(i).getY(), y) <= (int)Math.Pow(repos.getObject(i).getR(), 2))
-                        {
-                            if (repos.getObject(i).getSelected() == false)
-                                check = 1;
-                        }
+                        repos.getObject(i).setSelected(x, y);
                     }
-                    if (check > 0) break;
                 }
-                if (check != 0)
-                    for (int i = 0; i < repos.getSize(); ++i)
-                    {
-                        if (!repos.isNull(i))
-                        {
-                            if (GetDistance(repos.getObject(i).getX(), x, repos.getObject(i).getY(), y) <= (int)Math.Pow(repos.getObject(i).getR(), 2))
-                            {
-                                repos.getObject(i).setSelected(true);
-                            }
-                        }
-                    }
-
             }
             else
             {
                 for (int i = 0; i < repos.getSize(); ++i)
                 {
                     if (!repos.isNull(i))
-                        repos.getObject(i).setSelected(false);
+                        repos.getObject(i).unSelected();
                 }
-                x = this.PointToClient(Cursor.Position).X - pictureBox1.Location.X;
-                y = this.PointToClient(Cursor.Position).Y - pictureBox1.Location.Y;
+
                 for (int i = 0; i < repos.getSize(); ++i)
                 {
                     if (!repos.isNull(i))
                     {
-                        if (GetDistance(repos.getObject(i).getX(), x, repos.getObject(i).getY(), y) <= (int)Math.Pow(repos.getObject(i).getR(), 2))
-                        {
-                            check = 1;
-                            repos.getObject(i).setSelected(true);
-                        }
+                        repos.getObject(i).setSelected(x, y);
+                        if (repos.getObject(i).getSelected() == true)
+                            check = true;
                     }
                 }
-                if (check == 0) // Если не нашли объект
+                if (check == false) // Если не нашли объект
                 {
-                    if (fig != null)
+                    CShapes fig;
+                    if (кругToolStripMenuItem.Checked)
                     {
-                        if (fig is CCircle)
-                        {
-                            if (CheckIn(x, y, R))
-                            {
-                                repos.addObject(new CCircle(x, y, R));
-                                fig = null;
-
-                            }
-                        }
-                        else if (fig is CSquare)
-                        {
-                            if (CheckIn(x, y, R))
-                            {
-                                repos.addObject(new CSquare(x, y, R));
-                                fig = null;
-                            }
-                        }
-                        else if (fig is CTriangle)
-                        {
-                            if (CheckIn(x, y, R))
-                            {
-                                repos.addObject(new CTriangle(x, y, R));
-                                fig = null;
-                            }
-                        }
+                        fig = new CCircle(x, y, R);
                     }
-
+                    else if (квадратToolStripMenuItem.Checked)
+                    {
+                        fig = new CSquare(x, y, R);
+                    }
+                    else if (треугольникToolStripMenuItem.Checked)
+                    {
+                        fig = new CTriangle(x, y, R);
+                    }
+                    else fig = null;
+                    if (fig != null && fig.CheckIn(pictureBox1.Location.X, pictureBox1.Width, pictureBox1.Location.Y, pictureBox1.Height))
+                        repos.addObject(fig);
+                    unCheckedMenu();
                 }
             }
             pictureBox1.Refresh();	// Обновление формы
         }
-
+        private void unCheckedMenu()
+        {
+            кругToolStripMenuItem.Checked = false;
+            квадратToolStripMenuItem.Checked = false;
+            треугольникToolStripMenuItem.Checked = false;
+        }
         private void кругToolStripMenuItem_Click(object sender, EventArgs e)    // Запоминаем объект для создания
         {
-            fig = null;
-            fig = new CCircle();
+            unCheckedMenu();
+            кругToolStripMenuItem.Checked = true;
         }
 
         private void квадратToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            fig = null;
-            fig = new CSquare();
+            unCheckedMenu();
+            квадратToolStripMenuItem.Checked = true;
         }
 
         private void треугольникToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            fig = null;
-            fig = new CTriangle();
+            unCheckedMenu();
+            треугольникToolStripMenuItem.Checked = true;
         }
 
         private void увеличитьToolStripMenuItem_Click(object sender, EventArgs e)   // Увеличение объекта
@@ -207,8 +120,8 @@ namespace LabN7OOP
                 {
                     if (repos.getObject(i).getSelected())
                     {
-                        if (CheckIn(repos.getObject(i).getX(), repos.getObject(i).getY(), repos.getObject(i).getR() + 10))  // Проверка выхода
-                            repos.getObject(i).setR(repos.getObject(i).getR() + 10);
+                        if (repos.getObject(i).CheckIn(pictureBox1.Location.X + 10, pictureBox1.Width - 10, pictureBox1.Location.Y + 10, pictureBox1.Height - 10))  // Проверка выхода
+                            repos.getObject(i).setSize(10);
                     }
                 }
             }
@@ -222,8 +135,7 @@ namespace LabN7OOP
                 {
                     if (repos.getObject(i).getSelected())
                     {
-                        if (repos.getObject(i).getR() - 10 > 0)
-                            repos.getObject(i).setR(repos.getObject(i).getR() - 10);
+                        repos.getObject(i).setSize(-10);
                     }
                 }
             }
@@ -238,8 +150,8 @@ namespace LabN7OOP
                 {
                     if (repos.getObject(i).getSelected())
                     {
-                        if (CheckIn(repos.getObject(i).getX(), repos.getObject(i).getY() - 10, repos.getObject(i).getR()))  // Проверка выхода
-                            repos.getObject(i).setY(repos.getObject(i).getY() - 10);
+                        if (repos.getObject(i).CheckIn(pictureBox1.Location.X, pictureBox1.Width, pictureBox1.Location.Y + 10, pictureBox1.Height))
+                            repos.getObject(i).move(0, -10);
                     }
                 }
             }
@@ -254,8 +166,8 @@ namespace LabN7OOP
                 {
                     if (repos.getObject(i).getSelected())
                     {
-                        if (CheckIn(repos.getObject(i).getX(), repos.getObject(i).getY() + 10, repos.getObject(i).getR()))  // Проверка выхода
-                            repos.getObject(i).setY(repos.getObject(i).getY() + 10);
+                        if (repos.getObject(i).CheckIn(pictureBox1.Location.X, pictureBox1.Width, pictureBox1.Location.Y, pictureBox1.Height - 10))
+                            repos.getObject(i).move(0, 10);
                     }
                 }
             }
@@ -270,8 +182,8 @@ namespace LabN7OOP
                 {
                     if (repos.getObject(i).getSelected())
                     {
-                        if (CheckIn(repos.getObject(i).getX() - 10, repos.getObject(i).getY(), repos.getObject(i).getR()))  // Проверка выхода
-                            repos.getObject(i).setX(repos.getObject(i).getX() - 10);
+                        if (repos.getObject(i).CheckIn(pictureBox1.Location.X + 10, pictureBox1.Width, pictureBox1.Location.Y, pictureBox1.Height))
+                            repos.getObject(i).move(-10, 0);
                     }
                 }
             }
@@ -286,8 +198,8 @@ namespace LabN7OOP
                 {
                     if (repos.getObject(i).getSelected())
                     {
-                        if (CheckIn(repos.getObject(i).getX() + 10, repos.getObject(i).getY(), repos.getObject(i).getR()))  // Проверка выхода
-                            repos.getObject(i).setX(repos.getObject(i).getX() + 10);
+                        if (repos.getObject(i).CheckIn(pictureBox1.Location.X, pictureBox1.Width - 10, pictureBox1.Location.Y, pictureBox1.Height))
+                            repos.getObject(i).move(10, 0);
                     }
                 }
             }
@@ -299,7 +211,7 @@ namespace LabN7OOP
             for (int i = 0; i < repos.getSize(); ++i)
             {
                 if (!repos.isNull(i))
-                    if (repos.getObject(i).getSelected() == true)
+                    if (repos.getObject(i).getSelected())
                         repos.getObject(i).setColor(Color.Black);
             }
             pictureBox1.Refresh();	// Обновление формы
@@ -310,7 +222,7 @@ namespace LabN7OOP
             for (int i = 0; i < repos.getSize(); ++i)
             {
                 if (!repos.isNull(i))
-                    if (repos.getObject(i).getSelected() == true)
+                    if (repos.getObject(i).getSelected())
                         repos.getObject(i).setColor(Color.Red);
             }
             pictureBox1.Refresh();	// Обновление формы
@@ -321,7 +233,7 @@ namespace LabN7OOP
             for (int i = 0; i < repos.getSize(); ++i)
             {
                 if (!repos.isNull(i))
-                    if (repos.getObject(i).getSelected() == true)
+                    if (repos.getObject(i).getSelected())
                         repos.getObject(i).setColor(Color.Green);
             }
             pictureBox1.Refresh();	// Обновление формы
@@ -332,7 +244,7 @@ namespace LabN7OOP
             for (int i = 0; i < repos.getSize(); ++i)
             {
                 if (!repos.isNull(i))
-                    if (repos.getObject(i).getSelected() == true)
+                    if (repos.getObject(i).getSelected())
                         repos.getObject(i).setColor(Color.Blue);
             }
             pictureBox1.Refresh();	// Обновление формы
@@ -343,10 +255,48 @@ namespace LabN7OOP
             for (int i = 0; i < repos.getSize(); ++i)
             {
                 if (!repos.isNull(i))
-                    if (repos.getObject(i).getSelected() == true)
+                    if (repos.getObject(i).getSelected())
                         repos.delObject(i);
             }
             pictureBox1.Refresh();	// Обновление формы
+        }
+
+        private void создатьГруппуToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Group gr = new Group(0);
+            for (int i = 0; i < repos.getSize(); ++i)
+            {
+                if (!repos.isNull(i))
+                    if (repos.getObject(i).getSelected())
+                    {
+                        gr.addShape(repos.getObject(i));
+                        repos.delObject(i);
+                    }
+            }
+            repos.addObject(gr);
+        }
+
+        private void разгруппироватьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            for (int i = 0; i < repos.getSize(); ++i)
+            {
+                if (!repos.isNull(i))
+                    if (repos.getObject(i).getSelected())
+                    {
+                        if (repos.getObject(i) is Group)
+                        {
+                            Group gr = (Group)repos.getObject(i);
+                            for (int j = 0; j < gr.getCount(); ++j)
+                            {
+                                if (gr.getGroups()[j] is Group)
+                                    gr.getGroups()[j].unSelected();
+                                repos.addObject(gr.getGroups()[j]);
+                            }
+                            repos.delObject(i);
+                        }
+                    }
+            }
         }
     }
 }
