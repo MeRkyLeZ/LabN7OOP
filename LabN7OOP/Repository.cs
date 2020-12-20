@@ -17,25 +17,45 @@ namespace LabN7OOP
         {
             return null;
         }
-        public void loadShapes(string filename)
+
+        public void loadShapes(string filename) // Загрузка фигур
         {
             arr = null;
             arr = new CShapes[10];
             StreamReader sr;
-            string code;
-            using (sr = new StreamReader(filename))
+            using (sr = new StreamReader(filename)) // Открываем файл
             {
-                count = Convert.ToInt32(sr.ReadLine());
-
+                count = Convert.ToInt32(sr.ReadLine()); // Считываем кол-во файлов
+                if (count > size)   // Проверяем размер
+                {
+                    size = count + 1;
+                    CShapes[] tmp = new CShapes[size];
+                    arr = tmp;
+                }
                 for (int i = 0; i < count; ++i)
                 {
-                    arr[i] = createShape(sr.ReadLine());
+                    arr[i] = createShape(sr.ReadLine());    // Создаем фигуру
 
                     if (arr[i] != null)
-                        arr[i].load(sr);
+                        arr[i].load(sr);    // Загружаем фигуру
                 }
             }
-            sr.Close();
+            sr.Close(); // Закрываем файл
+        }
+
+        public void saveShapes(string filename) // Сохранение фигур
+        {
+            StreamWriter sw;
+            using (sw = new StreamWriter(filename)) // Открываем файл
+            {
+                sw.WriteLine(count);    // Записываем кол-во файлов
+                for (int i = 0; i < size; ++i)
+                {
+                    if (arr[i] != null)
+                        arr[i].save(sw);    // Сохраняем фигуру
+                }
+            }
+            sw.Close(); // Закрываем файл
         }
     }
 
@@ -74,9 +94,9 @@ namespace LabN7OOP
             {
                 pos++;
             }
-            if (pos == size - 1)
+            if (pos >= size - 1)
             {
-                size++;
+                size = pos + 1;
                 CShapes[] tmp = new CShapes[size];
                 for (int i = 0; i < size - 1; ++i)
                 {
@@ -123,7 +143,7 @@ namespace LabN7OOP
             return false;
         }
 
-        public override CShapes createShape(string c)
+        public override CShapes createShape(string c)   // Создаем фигуру
         {
             CShapes cs = null;
             switch (c)
@@ -143,8 +163,5 @@ namespace LabN7OOP
             }
             return cs;
         }
-
-
-
     }
 }

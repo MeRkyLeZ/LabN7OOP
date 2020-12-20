@@ -10,23 +10,23 @@ namespace LabN7OOP
 {
     public abstract class CShapes
     {
-        public abstract void move(int dx, int dy);
-        public abstract void draw(Graphics g);
-        public abstract void setSize(int dR);
-        public abstract bool getSelected();
-        public abstract void setSelected(int x, int y);
-        public abstract void setSelected(bool selected);
-        public abstract void unSelected();
-        public abstract void setColor(Color col);
+        public abstract void move(int dx, int dy);  // Смещение объекта
+        public abstract void draw(Graphics g);  // Зарисовка объекта
+        public abstract void setSize(int dR);   // Установка размера
+        public abstract bool getSelected(); // Проверка выбора
+        public abstract void setSelected(int x, int y); // Вычисление попадания
+        public abstract void setSelected();    // Установка выбора
+        public abstract void unSelected();  // Снятие выбора
+        public abstract void setColor(Color col);   // Установка цвета
         public abstract bool CheckIn(int X1, int X2, int Y1, int Y2);   // Проверка выхода за поле рисования
-        public abstract void save(StreamReader stream);
-        public abstract void load(StreamReader stream);
+        public abstract void save(StreamWriter stream); // Сохранение
+        public abstract void load(StreamReader stream); // Загрузка
     }
 
-    public class Group : CShapes
+    public class Group : CShapes    // Группа
     {
-        private int size;
-        private int count;
+        private int size;   // Размер группы
+        private int count;  // Коль-во элементов
         private bool selected;
         private CShapes[] group;
 
@@ -46,7 +46,7 @@ namespace LabN7OOP
             }
         }
 
-        public void addShape(CShapes shape)
+        public void addShape(CShapes shape) // Добавление элемента
         {
             if (count >= size)
             {
@@ -62,7 +62,7 @@ namespace LabN7OOP
 
         }
 
-        public override void draw(Graphics g)
+        public override void draw(Graphics g)   // Зарисовка
         {
             for (int i = 0; i < size; ++i)
             {
@@ -75,7 +75,7 @@ namespace LabN7OOP
             return selected;
         }
 
-        public override void move(int dx, int dy)
+        public override void move(int dx, int dy)   // Перемещение
         {
             for (int i = 0; i < size; ++i)
             {
@@ -97,17 +97,18 @@ namespace LabN7OOP
             {
                 for (int i = 0; i < size; ++i)
                 {
-                    group[i].setSelected(true);
+                    group[i].setSelected();
                 }
             }
         }
 
 
-        public override void setSelected(bool selected)
+        public override void setSelected()
         {
+            selected = true;
             for (int i = 0; i < size; ++i)
             {
-                group[i].setSelected(selected);
+                group[i].setSelected();
             }
         }
         public int getCount()
@@ -120,7 +121,7 @@ namespace LabN7OOP
             return group;
         }
 
-        public override void setSize(int dR)
+        public override void setSize(int dR)    // Установка размера
         {
             for (int i = 0; i < size; ++i)
             {
@@ -162,8 +163,10 @@ namespace LabN7OOP
             }
         }
 
-        public override void save(StreamReader stream)
+        public override void save(StreamWriter stream)
         {
+            stream.WriteLine("Group");
+            stream.WriteLine(count);
             for (int i = 0; i < size; ++i)
             {
                 group[i].save(stream);
@@ -200,9 +203,9 @@ namespace LabN7OOP
     public abstract class Figure : CShapes
     {
         public abstract int GetDistance(int x, int y);   // Вычисление дистанции между точками
-        public abstract int getR();
-        public abstract int getX();
-        public abstract int getY();
+        public abstract int getR(); // Получение размера
+        public abstract int getX(); // Получение X
+        public abstract int getY(); // Получение Y
     }
 
     public class CCircle : Figure   // Объект
@@ -269,9 +272,9 @@ namespace LabN7OOP
             }
         }
 
-        public override void setSelected(bool selected)
+        public override void setSelected()
         {
-            this.selected = selected;
+            selected = true;
         }
 
         public override bool CheckIn(int X1, int X2, int Y1, int Y2)
@@ -310,9 +313,13 @@ namespace LabN7OOP
             selected = false;
         }
 
-        public override void save(StreamReader stream)
+        public override void save(StreamWriter stream)
         {
-
+            stream.WriteLine("CCircle");
+            stream.WriteLine(x);
+            stream.WriteLine(y);
+            stream.WriteLine(R);
+            stream.WriteLine(col.R + "," + col.G + "," + col.B);
         }
 
         public override void load(StreamReader stream)
@@ -391,9 +398,9 @@ namespace LabN7OOP
             }
         }
 
-        public override void setSelected(bool selected)
+        public override void setSelected()
         {
-            this.selected = selected;
+            selected = true;
         }
 
         public override bool CheckIn(int X1, int X2, int Y1, int Y2)
@@ -433,9 +440,13 @@ namespace LabN7OOP
             selected = false;
         }
 
-        public override void save(StreamReader stream)
+        public override void save(StreamWriter stream)
         {
-
+            stream.WriteLine("CSquare");
+            stream.WriteLine(x);
+            stream.WriteLine(y);
+            stream.WriteLine(R);
+            stream.WriteLine(col.R + "," + col.G + "," + col.B);
         }
 
         public override void load(StreamReader stream)
@@ -520,9 +531,9 @@ namespace LabN7OOP
             }
         }
 
-        public override void setSelected(bool selected)
+        public override void setSelected()
         {
-            this.selected = selected;
+            selected = true;
         }
         public override bool CheckIn(int X1, int X2, int Y1, int Y2)
         {
@@ -559,9 +570,13 @@ namespace LabN7OOP
             selected = false;
         }
 
-        public override void save(StreamReader stream)
+        public override void save(StreamWriter stream)
         {
-
+            stream.WriteLine("CTriangle");
+            stream.WriteLine(x);
+            stream.WriteLine(y);
+            stream.WriteLine(R);
+            stream.WriteLine(col.R + "," + col.G + "," + col.B);
         }
 
         public override void load(StreamReader stream)
