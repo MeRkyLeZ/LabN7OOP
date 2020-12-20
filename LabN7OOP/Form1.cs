@@ -297,6 +297,13 @@ namespace LabN7OOP
                         }
                     }
             }
+            pictureBox1.Refresh();	// Обновление формы
+        }
+
+        private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            repos.loadShapes("shapes.txt");
+            pictureBox1.Refresh();	// Обновление формы
         }
     }
 }

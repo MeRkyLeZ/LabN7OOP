@@ -53,6 +53,9 @@ namespace LabN7OOP
             this.группировкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.создатьГруппуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.разгруппироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.сохранениеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.сохранитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.загрузитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -72,7 +75,8 @@ namespace LabN7OOP
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.фигурыToolStripMenuItem,
             this.инструментыToolStripMenuItem,
-            this.группировкаToolStripMenuItem});
+            this.группировкаToolStripMenuItem,
+            this.сохранениеToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -259,6 +263,28 @@ namespace LabN7OOP
             this.разгруппироватьToolStripMenuItem.Text = "Разгруппировать";
             this.разгруппироватьToolStripMenuItem.Click += new System.EventHandler(this.разгруппироватьToolStripMenuItem_Click);
             // 
+            // сохранениеToolStripMenuItem
+            // 
+            this.сохранениеToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.сохранитьToolStripMenuItem,
+            this.загрузитьToolStripMenuItem});
+            this.сохранениеToolStripMenuItem.Name = "сохранениеToolStripMenuItem";
+            this.сохранениеToolStripMenuItem.Size = new System.Drawing.Size(86, 20);
+            this.сохранениеToolStripMenuItem.Text = "Сохранение";
+            // 
+            // сохранитьToolStripMenuItem
+            // 
+            this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.сохранитьToolStripMenuItem.Text = "Сохранить";
+            // 
+            // загрузитьToolStripMenuItem
+            // 
+            this.загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
+            this.загрузитьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.загрузитьToolStripMenuItem.Text = "Загрузить";
+            this.загрузитьToolStripMenuItem.Click += new System.EventHandler(this.загрузитьToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -303,6 +329,9 @@ namespace LabN7OOP
         private System.Windows.Forms.ToolStripMenuItem группировкаToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem создатьГруппуToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem разгруппироватьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem сохранениеToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem сохранитьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem загрузитьToolStripMenuItem;
     }
 }
 

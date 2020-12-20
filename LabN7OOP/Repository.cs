@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,14 +8,40 @@ using System.Threading.Tasks;
 
 namespace LabN7OOP
 {
-
-
-    class Repository    // Хранилище
+    public class Data
     {
-        private CShapes[] arr;   // Массив элементов
-        private int size;   // Размер массива
-        private int count;  // Количество элементов
+        protected CShapes[] arr;    // Массив элементов
+        protected int size;   // Размер массива
+        protected int count;  // Количество элементов
+        public virtual CShapes createShape(string c)
+        {
+            return null;
+        }
+        public void loadShapes(string filename)
+        {
+            arr = null;
+            arr = new CShapes[10];
+            StreamReader sr;
+            string code;
+            using (sr = new StreamReader(filename))
+            {
+                count = Convert.ToInt32(sr.ReadLine());
 
+                for (int i = 0; i < count; ++i)
+                {
+                    arr[i] = createShape(sr.ReadLine());
+
+                    if (arr[i] != null)
+                        arr[i].load(sr);
+                }
+            }
+            sr.Close();
+        }
+    }
+
+
+    class Repository : Data    // Хранилище
+    {
         public Repository() // Конструктор
         {
             size = 0;
@@ -95,6 +122,29 @@ namespace LabN7OOP
                 return true;
             return false;
         }
+
+        public override CShapes createShape(string c)
+        {
+            CShapes cs = null;
+            switch (c)
+            {
+                case "CCircle":
+                    cs = new CCircle(0, 0, 0);
+                    break;
+                case "CSquare":
+                    cs = new CSquare(0, 0, 0);
+                    break;
+                case "CTriangle":
+                    cs = new CTriangle(0, 0, 0);
+                    break;
+                case "Group":
+                    cs = new Group(1);
+                    break;
+            }
+            return cs;
+        }
+
+
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace LabN7OOP
         public abstract void unSelected();
         public abstract void setColor(Color col);
         public abstract bool CheckIn(int X1, int X2, int Y1, int Y2);   // Проверка выхода за поле рисования
+        public abstract void save(StreamReader stream);
+        public abstract void load(StreamReader stream);
     }
 
     public class Group : CShapes
@@ -45,9 +48,9 @@ namespace LabN7OOP
 
         public void addShape(CShapes shape)
         {
-            if (count == size)
+            if (count >= size)
             {
-                size++;
+                size = count + 1;
                 CShapes[] tmp = new CShapes[size];
                 for (int i = 0; i < size - 1; ++i)
                 {
@@ -156,6 +159,40 @@ namespace LabN7OOP
             for (int i = 0; i < size; ++i)
             {
                 group[i].setColor(col);
+            }
+        }
+
+        public override void save(StreamReader stream)
+        {
+            for (int i = 0; i < size; ++i)
+            {
+                group[i].save(stream);
+            }
+        }
+
+        public override void load(StreamReader stream)
+        {
+            int imax = Convert.ToInt32(stream.ReadLine());
+            for (int i = 0; i < imax; ++i)
+            {
+                CShapes cs = null;
+                switch (stream.ReadLine())
+                {
+                    case "CCircle":
+                        cs = new CCircle(0, 0, 0);
+                        break;
+                    case "CSquare":
+                        cs = new CSquare(0, 0, 0);
+                        break;
+                    case "CTriangle":
+                        cs = new CTriangle(0, 0, 0);
+                        break;
+                    case "Group":
+                        cs = new Group(1);
+                        break;
+                }
+                addShape(cs);
+                group[i].load(stream);
             }
         }
     }
@@ -272,6 +309,21 @@ namespace LabN7OOP
         {
             selected = false;
         }
+
+        public override void save(StreamReader stream)
+        {
+
+        }
+
+        public override void load(StreamReader stream)
+        {
+            x = Convert.ToInt32(stream.ReadLine());
+            y = Convert.ToInt32(stream.ReadLine());
+            R = Convert.ToInt32(stream.ReadLine());
+            String[] str = stream.ReadLine().Split(','); ;
+            col = Color.FromArgb(Convert.ToInt32(str[0]), Convert.ToInt32(str[1]), Convert.ToInt32(str[2]));
+            selected = false;
+        }
     }
 
     class CSquare : Figure   // Объект
@@ -378,6 +430,21 @@ namespace LabN7OOP
 
         public override void unSelected()
         {
+            selected = false;
+        }
+
+        public override void save(StreamReader stream)
+        {
+
+        }
+
+        public override void load(StreamReader stream)
+        {
+            x = Convert.ToInt32(stream.ReadLine());
+            y = Convert.ToInt32(stream.ReadLine());
+            R = Convert.ToInt32(stream.ReadLine());
+            String[] str = stream.ReadLine().Split(','); ;
+            col = Color.FromArgb(Convert.ToInt32(str[0]), Convert.ToInt32(str[1]), Convert.ToInt32(str[2]));
             selected = false;
         }
     }
@@ -489,6 +556,21 @@ namespace LabN7OOP
 
         public override void unSelected()
         {
+            selected = false;
+        }
+
+        public override void save(StreamReader stream)
+        {
+
+        }
+
+        public override void load(StreamReader stream)
+        {
+            x = Convert.ToInt32(stream.ReadLine());
+            y = Convert.ToInt32(stream.ReadLine());
+            R = Convert.ToInt32(stream.ReadLine());
+            String[] str = stream.ReadLine().Split(','); ;
+            col = Color.FromArgb(Convert.ToInt32(str[0]), Convert.ToInt32(str[1]), Convert.ToInt32(str[2]));
             selected = false;
         }
     }
