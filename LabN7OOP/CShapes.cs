@@ -123,10 +123,11 @@ namespace LabN7OOP
 
         public override void setSize(int dR)    // Установка размера
         {
-            for (int i = 0; i < size; ++i)
-            {
-                group[i].setSize(dR);
-            }
+            if (minSize() + dR > 0)
+                for (int i = 0; i < size; ++i)
+                {
+                    group[i].setSize(dR);
+                }
         }
 
         public override bool CheckIn(int X1, int X2, int Y1, int Y2)
@@ -197,6 +198,22 @@ namespace LabN7OOP
                 addShape(cs);
                 group[i].load(stream);
             }
+        }
+
+        private int minSize()   // Получаем минимальный размер объекта группы
+        {
+            int minsize = int.MaxValue;
+            for (int i = 0; i < size; ++i)
+            {
+                if (group[i] is Group)
+                {
+                    if (minsize > ((Group)group[i]).minSize())
+                        minsize = ((Group)group[i]).minSize();
+                }
+                else if (minsize > ((Figure)group[i]).getR())
+                    minsize = ((Figure)group[i]).getR();
+            }
+            return minsize;
         }
     }
 
